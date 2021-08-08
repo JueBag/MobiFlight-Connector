@@ -952,6 +952,17 @@ namespace MobiFlight
                         );
                         break;
 
+                    case MobiFlightSPIOutput.TYPE:
+                        mobiFlightCache.setSPIOutput(
+                            serial,
+                            cfg.SPIOutputAddress,
+                            value,
+                            int.Parse(cfg.SPIOutputMin),
+                            int.Parse(cfg.SPIOutputMax),
+                            Byte.Parse(cfg.SPIOutputMaxRotationPercent)
+                        );
+                        break;
+
                     case OutputConfig.LcdDisplay.Type:
                         mobiFlightCache.setLcdDisplay(
                             serial,
@@ -1315,7 +1326,9 @@ namespace MobiFlight
                 case MobiFlightServo.TYPE:
                     ExecuteDisplay(offCfg.ServoMin, offCfg);
                     break;
-
+                case MobiFlightSPIOutput.TYPE:
+                    ExecuteDisplay(offCfg.SPIOutputMin, offCfg);
+                    break;
                 case OutputConfig.LcdDisplay.Type:
                     offCfg.LcdDisplay.Lines.Clear();
                     offCfg.LcdDisplay.Lines.Add(new string(' ', 20 * 4));
@@ -1346,6 +1359,9 @@ namespace MobiFlight
                     ExecuteDisplay(cfg.ServoMax, cfg);
                     break;
 
+                case MobiFlightSPIOutput.TYPE:
+                    ExecuteDisplay(cfg.SPIOutputMax, cfg);
+                    break;
                 case OutputConfig.LcdDisplay.Type:
                     ExecuteDisplay("1234567890", cfg);
                     break;

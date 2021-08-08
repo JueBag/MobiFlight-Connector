@@ -37,6 +37,7 @@ namespace MobiFlight.UI.Dialogs
         Panels.DisplayNothingSelectedPanel  displayNothingSelectedPanel = new Panels.DisplayNothingSelectedPanel();
         Panels.LCDDisplayPanel              displayLcdDisplayPanel      = new Panels.LCDDisplayPanel();
         Panels.ServoPanel                   servoPanel                  = new Panels.ServoPanel();
+        Panels.SPIOutputPanel               spioutputPanel              = new Panels.SPIOutputPanel();
         Panels.StepperPanel                 stepperPanel                = new Panels.StepperPanel();
         Panels.DisplayShiftRegisterPanel    displayShiftRegisterPanel   = new Panels.DisplayShiftRegisterPanel();
 
@@ -140,6 +141,8 @@ namespace MobiFlight.UI.Dialogs
             displayNothingSelectedPanel.Dock = DockStyle.Top;
             groupBoxDisplaySettings.Controls.Add(servoPanel);
             servoPanel.Dock = DockStyle.Top;
+            groupBoxDisplaySettings.Controls.Add(spioutputPanel);
+            spioutputPanel.Dock = DockStyle.Top;
             groupBoxDisplaySettings.Controls.Add(stepperPanel);
             stepperPanel.Dock = DockStyle.Top;
             groupBoxDisplaySettings.Controls.Add(displayShiftRegisterPanel);
@@ -161,6 +164,7 @@ namespace MobiFlight.UI.Dialogs
             displayPanels.Add(displayLedDisplayPanel);
             displayPanels.Add(displayNothingSelectedPanel);
             displayPanels.Add(servoPanel);
+            displayPanels.Add(spioutputPanel);
             displayPanels.Add(stepperPanel);
             displayPanels.Add(displayLcdDisplayPanel);
             displayPanels.Add(displayShiftRegisterPanel);
@@ -372,6 +376,8 @@ namespace MobiFlight.UI.Dialogs
 
             servoPanel.syncFromConfig(config);
 
+            spioutputPanel.syncFromConfig(config);
+
             // it is not nice but we haev to check what kind of stepper the stepper is
             // to show or not show the manual calibration piece.
             stepperPanel.syncFromConfig(config);
@@ -496,6 +502,8 @@ namespace MobiFlight.UI.Dialogs
 
             servoPanel.syncToConfig(config);
 
+            spioutputPanel.syncToConfig(config);
+
             stepperPanel.syncToConfig(config);
 
             displayLcdDisplayPanel.syncToConfig(config);
@@ -599,6 +607,10 @@ namespace MobiFlight.UI.Dialogs
 
                             case DeviceType.Servo:
                                 displayTypeComboBox.Items.Add(DeviceType.Servo.ToString("F"));
+                                break;
+
+                            case DeviceType.SPIOutput:
+                                displayTypeComboBox.Items.Add(DeviceType.SPIOutput.ToString("F"));
                                 break;
 
                             case DeviceType.Stepper:
@@ -749,6 +761,7 @@ namespace MobiFlight.UI.Dialogs
                     List<ListItem> outputs = new List<ListItem>();
                     List<ListItem> ledSegments = new List<ListItem>();
                     List<ListItem> servos = new List<ListItem>();
+                    List<ListItem> spioutputs = new List<ListItem>();
                     List<ListItem> stepper = new List<ListItem>();
                     List<ListItem> lcdDisplays = new List<ListItem>();
                     List<ListItem> shiftRegisters = new List<ListItem>();
@@ -769,6 +782,10 @@ namespace MobiFlight.UI.Dialogs
 
                             case DeviceType.Servo:
                                 servos.Add(new ListItem() { Value = device.Name, Label = device.Name });
+                                break;
+
+                            case DeviceType.SPIOutput:
+                                spioutputs.Add(new ListItem() { Value = device.Name, Label = device.Name });
                                 break;
 
                             case DeviceType.Stepper:
@@ -796,6 +813,8 @@ namespace MobiFlight.UI.Dialogs
                     displayLedDisplayPanel.SetAddresses(ledSegments);
 
                     servoPanel.SetAdresses(servos);
+
+                    spioutputPanel.SetAdresses(spioutputs);
 
                     stepperPanel.SetAdresses(stepper);
 
@@ -827,6 +846,12 @@ namespace MobiFlight.UI.Dialogs
                 {
                     servoPanel.Enabled = panelEnabled;
                     servoPanel.Height = displayPanelHeight;
+                }
+
+                if ((sender as ComboBox).Text == DeviceType.SPIOutput.ToString("F"))
+                {
+                    spioutputPanel.Enabled = panelEnabled;
+                    spioutputPanel.Height = displayPanelHeight;
                 }
 
                 if ((sender as ComboBox).Text == DeviceType.Stepper.ToString("F"))

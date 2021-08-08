@@ -479,6 +479,9 @@ namespace MobiFlight.UI.Panels
                             case MobiFlightServo.TYPE:
                                 row["OutputName"] = cfgItem.ServoAddress;
                                 break;
+                            case MobiFlightSPIOutput.TYPE:
+                                row["OutputName"] = cfgItem.SPIOutputAddress;
+                                break;
                             case MobiFlightStepper.TYPE:
                                 row["OutputName"] = cfgItem.StepperAddress;
                                 break;

@@ -545,6 +545,24 @@ namespace MobiFlight
             }
         }
 
+        public void setSPIOutput(string serial, string address, string value, int min, int max, byte maxRotationPercent)
+        {
+            try
+            {
+                if (!Modules.ContainsKey(serial)) return;
+
+                MobiFlightModule module = Modules[serial];
+                int iValue;
+                if (!int.TryParse(value, out iValue)) return;
+
+                module.SetSPIOutput(address, iValue, min, max, maxRotationPercent);
+            }
+            catch (Exception e)
+            {
+                throw new ArcazeCommandExecutionException(i18n._tr("ConfigErrorException_SettingSPIOutput"), e);
+            }
+        }
+
         public void setStepper(string serial, string address, string value, int inputRevolutionSteps, int outputRevolutionSteps, bool CompassMode)
         {
             try

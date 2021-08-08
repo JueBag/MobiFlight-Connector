@@ -13,6 +13,7 @@ namespace MobiFlight
         public int MaxEncoders = 0;
         public int MaxSteppers = 0;
         public int MaxServos = 0;
+        public int MaxSPIOutputs = 0;
         public int MaxLcdI2C = 0;
         public int MaxAnalogInputs = 0;
     }
@@ -27,6 +28,7 @@ namespace MobiFlight
             MaxEncoders = 20;
             MaxSteppers = 10;
             MaxServos = 10;
+            MaxSPIOutputs = 1;  //intially only 1 device is allowed!
             MaxLcdI2C = 2;
             MaxAnalogInputs = 5;
         }
@@ -42,6 +44,7 @@ namespace MobiFlight
             MaxEncoders = 4;
             MaxSteppers = 2;
             MaxServos = 2;
+            MaxSPIOutputs = 0;
             MaxLcdI2C = 2;
             MaxAnalogInputs = 2;
         }
@@ -57,6 +60,7 @@ namespace MobiFlight
             MaxEncoders = 2;
             MaxSteppers = 2;
             MaxServos = 2;
+            MaxSPIOutputs = 0;
             MaxLcdI2C = 2;
             MaxAnalogInputs = 2;
         }

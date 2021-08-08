@@ -36,6 +36,7 @@ namespace MobiFlight.UI.Dialogs
         UI.Panels.DisplayLedDisplayPanel displayLedDisplayPanel = new UI.Panels.DisplayLedDisplayPanel();
         UI.Panels.DisplayNothingSelectedPanel displayNothingSelectedPanel = new UI.Panels.DisplayNothingSelectedPanel();
         UI.Panels.ServoPanel servoPanel = new UI.Panels.ServoPanel();
+        UI.Panels.SPIOutputPanel spioutputPanel = new UI.Panels.SPIOutputPanel();
 
         public InputConfigWizard(ExecutionManager mainForm, 
                              InputConfigItem cfg,

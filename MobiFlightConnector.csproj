@@ -146,7 +146,9 @@
     <Reference Include="NCalc">
       <HintPath>lib\NCalc.dll</HintPath>
     </Reference>
-    <Reference Include="System" />
+    <Reference Include="System">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.dll</HintPath>
+    </Reference>
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Buffers.4.5.1\lib\netstandard1.1\System.Buffers.dll</HintPath>
     </Reference>
@@ -190,6 +192,7 @@
     <Compile Include="Base\SerialNumber.cs" />
     <Compile Include="Base\AppTelemetry.cs" />
     <Compile Include="Base\WriteCacheInterface.cs" />
+    <Compile Include="MobiFlight\Config\SPIOutput.cs" />
     <Compile Include="MobiFlight\Config\ShiftRegister.cs" />
     <Compile Include="MobiFlight\Config\IConfigRefConfigItem.cs" />
     <Compile Include="MobiFlight\Config\AnalogInput.cs" />
@@ -199,6 +202,7 @@
     <Compile Include="MobiFlight\MaximumDeviceNumberReachedMobiFlightException.cs" />
     <Compile Include="MobiFlight\InputConfig\MSFS2020EventIdInputAction.cs" />
     <Compile Include="MobiFlight\MobiFlightAnalogInput.cs" />
+    <Compile Include="MobiFlight\MobiFlightSPIOutput.cs" />
     <Compile Include="MobiFlight\MobiFlightShiftRegister.cs" />
     <Compile Include="MobiFlight\MobiFlightButton.cs" />
     <Compile Include="MobiFlight\MobiFlightEncoder.cs" />
@@ -322,6 +326,12 @@
     <Compile Include="UI\Panels\Config\TransformOptionsGroup.Designer.cs">
       <DependentUpon>TransformOptionsGroup.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\Panels\Device\MFSPIOutputPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Panels\Device\MFSPIOutputPanel.Designer.cs">
+      <DependentUpon>MFSPIOutputPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\Panels\InputConfigPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -351,6 +361,18 @@
     </Compile>
     <Compile Include="UI\Panels\Output\DisplayShiftRegisterPanel.Designer.cs">
       <DependentUpon>DisplayShiftRegisterPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Panels\Output\SPIOutputPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Panels\Output\SPIOutputPanel.Designer.cs">
+      <DependentUpon>SPIOutputPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Panels\Output\ServoPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Panels\Output\ServoPanel.Designer.cs">
+      <DependentUpon>ServoPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\Panels\Settings\ArcazePanel.cs">
       <SubType>UserControl</SubType>
@@ -655,12 +677,6 @@
     <Compile Include="UI\Panels\Output\StepperPanel.Designer.cs">
       <DependentUpon>StepperPanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\Panels\Output\ServoPanel.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UI\Panels\Output\ServoPanel.Designer.cs">
-      <DependentUpon>ServoPanel.cs</DependentUpon>
-    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="ProjectMessages\ProjectMessages.de.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -862,6 +878,9 @@
     <EmbeddedResource Include="UI\Panels\Device\MFLcdDisplayPanel.de.resx">
       <DependentUpon>MFLcdDisplayPanel.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UI\Panels\Device\MFSPIOutputPanel.resx">
+      <DependentUpon>MFSPIOutputPanel.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\Panels\Device\MFShiftRegisterPanel.de.resx">
       <DependentUpon>MFShiftRegisterPanel.cs</DependentUpon>
     </EmbeddedResource>
@@ -886,6 +905,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Panels\Output\DisplayPinPanel.de.resx">
       <DependentUpon>DisplayPinPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Panels\Output\SPIOutputPanel.de.resx">
+      <DependentUpon>SPIOutputPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Panels\Output\SPIOutputPanel.resx">
+      <DependentUpon>SPIOutputPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Panels\Output\ServoPanel.de.resx">
+      <DependentUpon>ServoPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Panels\Output\ServoPanel.resx">
+      <DependentUpon>ServoPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Panels\Settings\ArcazePanel.de.resx">
       <DependentUpon>ArcazePanel.cs</DependentUpon>
@@ -965,9 +996,6 @@
     <EmbeddedResource Include="UI\Panels\Action\KeyboardInputPanel.resx">
       <DependentUpon>KeyboardInputPanel.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\Panels\Output\ServoPanel.de.resx">
-      <DependentUpon>ServoPanel.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="UI\Panels\Output\StepperPanel.de.resx">
       <DependentUpon>StepperPanel.cs</DependentUpon>
     </EmbeddedResource>
@@ -987,6 +1015,7 @@
     <None Include="Resources\module-changed.png" />
     <None Include="Resources\module-mobiflight-update.png" />
     <Content Include="Resources\output.png" />
+    <Content Include="Resources\spioutput.png" />
     <Content Include="Resources\servo.png" />
     <Content Include="Resources\stepper.png" />
     <EmbeddedResource Include="UI\Dialogs\AboutForm.de.resx">
@@ -1096,9 +1125,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Panels\Input\EncoderPanel.resx">
       <DependentUpon>EncoderPanel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\Panels\Output\ServoPanel.resx">
-      <DependentUpon>ServoPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ProjectMessages\ProjectMessages.de.resx">
       <SubType>Designer</SubType>

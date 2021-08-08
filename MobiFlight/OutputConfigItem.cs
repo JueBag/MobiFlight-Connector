@@ -66,7 +66,13 @@ namespace MobiFlight
         public string       ServoMin                    { get; set; }
         public string       ServoMax                    { get; set; }
         public string       ServoMaxRotationPercent     { get; set; }
-        
+
+        // the spioutput stuff
+        public string SPIOutputAddress { get; set; }
+        public string SPIOutputMin { get; set; }
+        public string SPIOutputMax { get; set; }
+        public string SPIOutputMaxRotationPercent { get; set; }
+
         // the stepper stuff
         public string       StepperAddress              { get; set; }
         public string       StepperInputRev             { get; set; }
@@ -272,6 +278,27 @@ namespace MobiFlight
                         ServoMaxRotationPercent = reader["servoMaxRotationPercent"];
                     }
                 }
+                else if (DisplayType == MobiFlightSPIOutput.TYPE)
+                {
+                    // ignore empty values
+                    if (reader["spioutputAddress"] != null && reader["spioutputAddress"] != "")
+                    {
+                        SPIOutputAddress = reader["spioutputAddress"];
+                    }
+                    if (reader["spioutputMin"] != null && reader["spioutputMin"] != "")
+                    {
+                        SPIOutputMin = reader["spioutputMin"];
+                    }
+                    if (reader["spioutputMax"] != null && reader["spioutputMax"] != "")
+                    {
+                        SPIOutputMax = reader["spioutputMax"];
+                    }
+
+                    if (reader["spioutputMaxRotationPercent"] != null && reader["spioutputMaxRotationPercent"] != "")
+                    {
+                        SPIOutputMaxRotationPercent = reader["spioutputMaxRotationPercent"];
+                    }
+                }
                 else if (DisplayType == MobiFlightStepper.TYPE)
                 {
                     // ignore empty values
@@ -441,6 +468,13 @@ namespace MobiFlight
                     writer.WriteAttributeString("servoMax", ServoMax);
                     writer.WriteAttributeString("servoMaxRotationPercent", ServoMaxRotationPercent);
                 }
+                 else if (DisplayType == DeviceType.SPIOutput.ToString("F"))
+                {
+                    writer.WriteAttributeString("spioutputAddress", SPIOutputAddress);
+                    writer.WriteAttributeString("spioutputMin", SPIOutputMin);
+                    writer.WriteAttributeString("spioutputMax", SPIOutputMax);
+                    writer.WriteAttributeString("spioutputMaxRotationPercent", SPIOutputMaxRotationPercent);
+                }
                 else if (DisplayType == DeviceType.Stepper.ToString("F"))
                 {
                     writer.WriteAttributeString("stepperAddress", StepperAddress);
@@ -523,6 +557,11 @@ namespace MobiFlight
             clone.ServoMax                  = this.ServoMax;
             clone.ServoMin                  = this.ServoMin;
             clone.ServoMaxRotationPercent   = this.ServoMaxRotationPercent;
+
+            clone.SPIOutputAddress = this.SPIOutputAddress;
+            clone.SPIOutputMax = this.SPIOutputMax;
+            clone.SPIOutputMin = this.SPIOutputMin;
+            clone.SPIOutputMaxRotationPercent = this.SPIOutputMaxRotationPercent;
 
             clone.StepperAddress            = this.StepperAddress;
             clone.StepperInputRev           = this.StepperInputRev;

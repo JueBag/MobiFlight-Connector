@@ -45,7 +45,8 @@ namespace MobiFlight
         Encoder,             // 8
         Stepper,             // 9
         ShiftRegister,       // 10
-        AnalogInput          // 11
+        AnalogInput,          // 11
+        SPIOutput             //12
     }
 
     public class MobiFlightModule : IModule, IOutputModule
@@ -78,9 +79,10 @@ namespace MobiFlight
             Retrigger,              // 23
             ResetBoard,             // 24
             SetLcdDisplayI2C,       // 25
-            SetModuleBrightness,    // 26,
+            SetModuleBrightness,    // 26
             SetShiftRegisterPins,   // 27
-            AnalogChange            // 28           
+            AnalogChange,            // 28
+            SetSPIOutput             // 29
         };
 
         public delegate void InputDeviceEventHandler(object sender, InputEventArgs e);
@@ -184,6 +186,7 @@ namespace MobiFlight
         Dictionary<String, MobiFlightLedModule> ledModules = new Dictionary<string, MobiFlightLedModule>();
         Dictionary<String, MobiFlightStepper> stepperModules = new Dictionary<string, MobiFlightStepper>();
         Dictionary<String, MobiFlightServo> servoModules = new Dictionary<string, MobiFlightServo>();
+        Dictionary<String, MobiFlightSPIOutput> spioutputModules = new Dictionary<string, MobiFlightSPIOutput>();
         Dictionary<String, MobiFlightOutput> outputs = new Dictionary<string,MobiFlightOutput>();
         Dictionary<String, MobiFlightLcdDisplay> lcdDisplays = new Dictionary<string, MobiFlightLcdDisplay>();
         Dictionary<String, MobiFlightButton> buttons = new Dictionary<string, MobiFlightButton>();
@@ -293,6 +296,7 @@ namespace MobiFlight
             ledModules.Clear();
             stepperModules.Clear();
             servoModules.Clear();
+            spioutputModules.Clear();
             outputs.Clear();
             lcdDisplays.Clear();
             buttons.Clear();
@@ -322,6 +326,11 @@ namespace MobiFlight
                     case DeviceType.Servo:
                         device.Name = GenerateUniqueDeviceName(servoModules.Keys.ToArray(), device.Name);
                         servoModules.Add(device.Name, new MobiFlightServo() { CmdMessenger = _cmdMessenger, Name = device.Name, ServoNumber = servoModules.Count });
+                        break;
+
+                    case DeviceType.SPIOutput:
+                        device.Name = GenerateUniqueDeviceName(spioutputModules.Keys.ToArray(), device.Name);
+                        spioutputModules.Add(device.Name, new MobiFlightSPIOutput() { CmdMessenger = _cmdMessenger, Name = device.Name, SPIOutputNumber = spioutputModules.Count });
                         break;
 
                     case DeviceType.Output:
@@ -603,6 +612,29 @@ namespace MobiFlight
             return true;
         }
 
+        public bool SetSPIOutput(string spioutputAddress, int value, int min, int max, byte maxRotationPercent)
+        {
+            String key = "SPIOutput_" + spioutputAddress;
+
+            int iLastValue;
+            if (lastValue.ContainsKey(key))
+            {
+                if (!KeepAliveNeeded() && lastValue[key] == value.ToString()) return false;
+                iLastValue = int.Parse(lastValue[key]);
+            }
+            else
+            {
+                iLastValue = value;
+            }
+
+            spioutputModules[spioutputAddress].Min = min;
+            spioutputModules[spioutputAddress].Max = max;
+            spioutputModules[spioutputAddress].MaxRotationPercent = maxRotationPercent;
+            spioutputModules[spioutputAddress].MoveToPosition(value);
+            lastValue[key] = value.ToString();
+            return true;
+        }
+
         public bool SetStepper(string stepper, int value, int inputRevolutionSteps = -1)
         {
             String key = "STEPPER_" + stepper;
@@ -821,6 +853,11 @@ namespace MobiFlight
                 result.Add(servo);
             }
 
+            foreach (MobiFlightSPIOutput spioutput in spioutputModules.Values)
+            {
+                result.Add(spioutput);
+            }
+
             foreach (MobiFlightLcdDisplay lcdDisplay in lcdDisplays.Values)
             {
                 result.Add(lcdDisplay);
@@ -841,6 +878,7 @@ namespace MobiFlight
             result[MobiFlightLedModule.TYPE] = ledModules.Count;
             result[MobiFlightStepper.TYPE] = stepperModules.Count;
             result[MobiFlightServo.TYPE] = servoModules.Count;
+            result[MobiFlightSPIOutput.TYPE] = spioutputModules.Count;
             result[MobiFlightLcdDisplay.TYPE] = lcdDisplays.Count;
             result[MobiFlightButton.TYPE] = buttons.Count;
             result[MobiFlightEncoder.TYPE] = encoders.Count;
@@ -875,6 +913,12 @@ namespace MobiFlight
             {
                 if (servo.Name == name)
                     result.Add(servo);
+            }
+
+            foreach (MobiFlightSPIOutput spioutput in spioutputModules.Values)
+            {
+                if (spioutput.Name == name)
+                    result.Add(spioutput);
             }
 
             foreach (MobiFlightLcdDisplay lcdDisplay in lcdDisplays.Values)
@@ -914,6 +958,7 @@ namespace MobiFlight
             if (ledModules.Count > 0) result.Add(DeviceType.LedModule);
             if (stepperModules.Count > 0) result.Add(DeviceType.Stepper);
             if (servoModules.Count > 0) result.Add(DeviceType.Servo);
+            if (spioutputModules.Count > 0) result.Add(DeviceType.SPIOutput);
             if (lcdDisplays.Count > 0) result.Add(DeviceType.LcdDisplay);
             if (shiftRegisters.Count > 0) result.Add(DeviceType.ShiftRegister);
 
@@ -1083,6 +1128,10 @@ namespace MobiFlight
 
                     case DeviceType.Servo:
                         usedPins.Add(Convert.ToByte((device as MobiFlight.Config.Servo).DataPin));
+                        break;
+
+                    case DeviceType.SPIOutput:
+                        usedPins.Add(Convert.ToByte((device as MobiFlight.Config.SPIOutput).SlaveSelectPin));
                         break;
 
                     case DeviceType.Button:

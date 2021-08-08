@@ -24,6 +24,7 @@ namespace MobiFlight.UI.Panels.Settings
 
         const bool StepperSupport = true;
         const bool ServoSupport = true;
+        const bool SPIOutputSupport = true;
 
         private int NumberOfModulesForFirmwareUpdate = 0;
         private String FirmwareUpdatePath = "";
@@ -46,6 +47,8 @@ namespace MobiFlight.UI.Panels.Settings
 
             addStepperToolStripMenuItem.Visible = stepperToolStripMenuItem.Visible = StepperSupport;
             addServoToolStripMenuItem.Visible = servoToolStripMenuItem.Visible = ServoSupport;
+            addSPIOutputToolStripMenuItem.Visible = spioutputToolStripMenuItem.Visible = SPIOutputSupport;
+
 
             // initialize mftreeviewimagelist
             mfTreeViewImageList.Images.Add("module", MobiFlight.Properties.Resources.module_mobiflight);
@@ -57,6 +60,7 @@ namespace MobiFlight.UI.Panels.Settings
             mfTreeViewImageList.Images.Add(DeviceType.Encoder.ToString(), MobiFlight.Properties.Resources.encoder);
             mfTreeViewImageList.Images.Add(DeviceType.Stepper.ToString(), MobiFlight.Properties.Resources.stepper);
             mfTreeViewImageList.Images.Add(DeviceType.Servo.ToString(), MobiFlight.Properties.Resources.servo);
+            mfTreeViewImageList.Images.Add(DeviceType.SPIOutput.ToString(), MobiFlight.Properties.Resources.servo);
             mfTreeViewImageList.Images.Add(DeviceType.Output.ToString(), MobiFlight.Properties.Resources.output);
             mfTreeViewImageList.Images.Add(DeviceType.LedModule.ToString(), MobiFlight.Properties.Resources.led7);
             mfTreeViewImageList.Images.Add(DeviceType.LcdDisplay.ToString(), MobiFlight.Properties.Resources.led7);
@@ -333,6 +337,11 @@ namespace MobiFlight.UI.Panels.Settings
                             panel = new MFShiftRegisterPanel(dev as MobiFlight.Config.ShiftRegister, module.GetPins());
                             (panel as MFShiftRegisterPanel).Changed += new EventHandler(mfConfigDeviceObject_changed);
                             break;
+
+                        case DeviceType.SPIOutput:
+                            panel = new MFSPIOutputPanel(dev as MobiFlight.Config.SPIOutput, module.GetPins());
+                            (panel as MFSPIOutputPanel).Changed += new EventHandler(mfConfigDeviceObject_changed);
+                            break;
                             // output
                     }
                 }
@@ -464,6 +473,16 @@ namespace MobiFlight.UI.Panels.Settings
                         (cfgItem as MobiFlight.Config.ShiftRegister).LatchPin = getVirtualModuleFromTree().GetFreePins().ElementAt(2).ToString();                        
                         break;
 
+                    case "spioutputToolStripMenuItem":
+                    case "addSPIOutputToolStripMenuItem":
+                        if (statistics[MobiFlightSPIOutput.TYPE] == tempModule.ToMobiFlightModuleInfo().GetCapabilities().MaxSPIOutputs)
+                        {
+                            throw new MaximumDeviceNumberReachedMobiFlightException(MobiFlightSPIOutput.TYPE, tempModule.ToMobiFlightModuleInfo().GetCapabilities().MaxSPIOutputs);
+                        }
+                                                cfgItem = new MobiFlight.Config.SPIOutput();
+                        (cfgItem as MobiFlight.Config.SPIOutput).SlaveSelectPin = getVirtualModuleFromTree().GetFreePins().ElementAt(0).Pin.ToString();
+                        break;
+                        
                     default:
                         // do nothing
                         return;
